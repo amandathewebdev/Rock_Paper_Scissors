@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Rock Paper Scissors | With UI</title>
+
+		<link href="https://fonts.googleapis.com/css2?family=Ranchers&display=swap" rel="stylesheet"> 
+
+		<style>
+			* {
+				padding: 0;
+				margin: 0;
+			}
+			img {
+				width: auto;
+				max-width: 100%
+			}
+			body {
+				background-color: #353535;
+				color: #fff;
+				font-size: 16px;
+				font-family: Arial, Helvetica, sans-serif;
+			}
+			.container {
+				max-width: 1000px;
+				margin: 0 auto;
+			}
+			h1 {
+				font-family: 'Ranchers', cursive;
+				font-size: 32px;
+				margin: 10% auto 10px auto;
+				text-align: center;
+			}
+			h2 {
+				text-align: center;
+				text-transform: uppercase;
+				letter-spacing: 1px;
+				margin: 0 auto 5px auto;
+				font-size: 16px;
+			}
+			.choices {
+				display: flex;
+				justify-content: space-between;  
+				width: 100%;
+				margin-top: 30px;
+			}
+			button {
+				background-color: #3C6E71;
+				border: none;
+				color: #fff;
+				padding: 30px;
+				text-align: center;
+				max-width: 200px;
+				transition: all .2s ease-in-out;
+				font-family: 'Ranchers', cursive;
+				font-size: 22px;
+				letter-spacing: 1px;
+			}
+			button:hover {
+				transform: 0.7s;
+				background-color: #f28f3b;
+				transform: scale(1.1);
+			}
+			button:active {
+				background-color: #284b63;
+				transform: translateY(4px);
+			}
+			.results, .final-score {
+				padding-top: 30px;
+				text-align: center;
+			}
+			.final-score {
+				font-family: 'Ranchers', cursive;
+				font-size: 22px;
+				letter-spacing: 1px;
+			}
+
+		</style>
+	</head>
+
+	<body>
+		<div class="container">
+			<h1>Choose Your Weapon</h1>
+			<h2>Round: <span class="round"></span> / 5</h2>
+			<h2>Your Score: <span class="score"></span></h2>
+			<h2>Computer Score: <span class="comp-score"></span></h2>
+
+			<div class="choices">
+				<button id="rock">
+					<img src="img/rock.png">
+					Rock
+				</button>
+
+				<button id="paper">
+					<img src="img/paper.png">
+					Paper
+				</button>
+
+				<button id="scissors">
+					<img src="img/scissors.png">
+					Scissors
+				</button>
+			</div>
+
+			<div class="results"></div>
+			<div class="final-score"></div>
+		</div>
+
+		<script>
+			let score = 0;
+			let computerScore = 0;
+			let round = 0;
+
+			let scoreKeeper = document.querySelector('.score');
+			let compScoreKeeper = document.querySelector('.comp-score');
+			let roundDisplay = document.querySelector('.round');
+			let results = document.querySelector('.results');
+			let finalScore = document.querySelector('.final-score');
+
+			scoreKeeper.textContent = score;
+			compScoreKeeper.textContent = computerScore;
+			roundDisplay.textContent = round;
+
+			//get user choice from buttons
+			let userChoice =  Array.from(document.querySelectorAll('button'));
+			userChoice.forEach(button => button.addEventListener('click', () => {
+				playRound(button.id);
+			}));
+
+			//randomly generate computer choice
+			function computerPlay() {
+				const computerAction = ['rock', 'paper', 'scissors'];
+				let random = Math.floor(Math.random()*computerAction.length);
+				let randomResult = computerAction[random];
+
+				return randomResult;
+			}
+
+			//compare user and computer choices
+			function playRound(playerSelection, computerSelection) {
+
+				computerSelection = computerPlay();
+
+				//win
+				if (playerSelection == 'rock' && computerSelection == 'scissors'
+					|| playerSelection == 'paper' && computerSelection == 'rock'
+					|| playerSelection == 'scissors' && computerSelection == 'paper') {
+
+						results.textContent = `You win! ${playerSelection} beats ${computerSelection}.`;
+						score++;
+				}
+
+				//lose
+				else if (playerSelection == 'rock' && computerSelection == 'paper'
+					|| playerSelection == 'paper' && computerSelection == 'scissors'
+					|| playerSelection == 'scissors' && computerSelection == 'rock') {
+
+						results.textContent = `You lose! ${computerSelection} beats ${playerSelection}.`;
+						computerScore++;
+				}
+
+				//draw
+				else if (playerSelection == computerSelection) {
+					results.textContent = `It's a draw. ${computerSelection} equals ${playerSelection}.`;
+				}
+
+				round++;
+				scoreKeeper.textContent = score;
+				compScoreKeeper.textContent = computerScore;
+				roundDisplay.textContent = round;
+
+				if (round == 5 && score < 3) {
+					finalScore.textContent = "Game over! A score of less than 3 loses.";
+				} else if (round == 5 && score >= 3) {
+					finalScore.textContent = "You win the game! A score of more than 3 wins.";
+				} 
+
+			} // end playRound()
+
+		</script>
+	</body>
+</html>
